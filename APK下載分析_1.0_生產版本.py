@@ -6,7 +6,7 @@ from time import sleep
 from openpyxl import workbook , load_workbook
 import os ,ytFuntion ,re ,subprocess ,time
 
-#更新寫法及加入APK下載
+#1.1修正為生產下載位置
 
 def downloadAPK():
    countTime = 0
@@ -14,7 +14,7 @@ def downloadAPK():
       os.remove(appName +".apk")
    elif os.path.isfile(appName + ".apk.crdownload"):
       os.remove(appName + ".apk.crdownload")
-   control_Web.webDriver.get(url)
+   control_Web.webDriver.get(re.sub("/dev" ,"" ,url)) #生產下載位置
    while True:
       if os.path.isfile(appName +".apk"):
          return " "
@@ -45,7 +45,7 @@ def appspilt():
          sheetApp["E" + str(j+1)].value = versionCode
          sheetApp["F" + str(j+1)].value = versionName
          sheetApp["G" + str(j+1)].value = launchable_activity_name
-         wb.save("DEV.xlsx") 
+         wb.save("生產.xlsx") 
          return " "
       except:
          print(appName + "APP分析失敗。")
@@ -72,7 +72,7 @@ for i in range(1 ,len(sheet["B"])+1):
    if str(sheet["B" + str(i)].value).strip() == "APKIOS":
       google_Driver_url = str(sheet["D" + str(i)].value).strip()
 
-testdayFile = time.strftime("%y_%m_%d") + "_DEV"
+testdayFile = time.strftime("%y_%m_%d") + "_生產"
    
 if not os.path.exists(testdayFile):    #先確認資料夾是否存在
     os.makedirs(testdayFile)
@@ -143,6 +143,6 @@ for i in range(int(startNumber) ,len(sheetDownload["A"])+1):
    appspilt()
    
 os.chdir(ogCwd)
-wb.save("DEV.xlsx")
+wb.save("生產.xlsx")
 #control_Web.webDriver.quit()
 print(downloadAPKFail)
